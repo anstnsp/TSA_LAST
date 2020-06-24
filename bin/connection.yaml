@@ -1,0 +1,239 @@
+#########################################################
+# 핑거 내부 개발서버용 설정
+# enroll 및 blockchain network connection 시 필요한 parameter
+# 192.168.10.253 - 핑거 개발서버 사설망 (핑거 내 작업시 해당 IP로 설정진행
+# 121.141.236.32 - 핑거 개발서버 공인망 (외부에서 작업시 해당 IP로 설정진행
+# 외부 배포시 해당 yaml 파일과 FabricSDK.jar를 같은 디렉토리에 위치
+#########################################################
+name: first-network-org1
+version: 1.0.0
+client:
+  organization: nonghyupit
+  connection:
+    timeout:
+      peer:
+        endorser: '300'
+
+channels:
+    cert-channel:
+        orderers:
+          - orderer0.orgorderer.com
+          - orderer1.orgorderer.com
+          - orderer2.orgorderer.com
+        peers:
+            peer0.orgnonghyupit.com:
+              endorsingPeer: true
+              chaincodeQuery: true
+              ledgerQuery: true
+              eventSource: true
+            peer1.orgnonghyupit.com:
+              endorsingPeer: true
+              chaincodeQuery: true
+              ledgerQuery: true
+              eventSource: true
+            peer2.orgnonghyupit.com:
+              endorsingPeer: true
+              chaincodeQuery: true
+              ledgerQuery: true
+              eventSource: true
+
+                    
+organizations:
+  nonghyupit:
+    mspid: nonghyupitMSP
+    peers:
+      - peer0.orgnonghyupit.com
+      - peer1.orgnonghyupit.com
+      - peer2.orgnonghyupit.com
+    certificateAuthorities:
+      - ca.orgnonghyupit.com
+
+orderers:
+   orderer0.orgorderer.com:
+      name: orderer0.orgorderer.com
+      url: grpcs://121.141.236.32:7050
+      tlsCACerts: 
+          pem: |
+            -----BEGIN CERTIFICATE-----
+            MIICGDCCAb+gAwIBAgIUfq/D6CUspzFW5pA0f5S+3ZmWNv0wCgYIKoZIzj0EAwIw
+            aTELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK
+            EwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRowGAYDVQQDExFjYS5vcmdv
+            cmRlcmVyLmNvbTAeFw0yMDA0MjQwNDIxMDBaFw0zNTA0MjEwNDIxMDBaMGkxCzAJ
+            BgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEUMBIGA1UEChMLSHlw
+            ZXJsZWRnZXIxDzANBgNVBAsTBkZhYnJpYzEaMBgGA1UEAxMRY2Eub3Jnb3JkZXJl
+            ci5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAR3caoKJgW4RhdnLOJIhDSp
+            UcAaKk0+tKrGpLj94IeaUh41DI7zMNFRWWqfxgEPQDZLjPOW928paV5FWSToUv60
+            o0UwQzAOBgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBATAdBgNVHQ4E
+            FgQUplKdVSHbjwS7wEvgiIyBctUQJqMwCgYIKoZIzj0EAwIDRwAwRAIgbVq29c0N
+            6Cc2n/OmEKv2HttRLtLJkti0aJVC3fZCvCQCIEUahxrRnv7qRMSzx17YF5jPgjWj
+            IjrjlcuhoT8l0d0u
+            -----END CERTIFICATE-----
+      grpcOptions:
+        ssl-target-name-override: orderer0.orgorderer.com
+        hostnameOverride: orderer0.orgorderer.com
+        
+   orderer1.orgorderer.com:
+      name: orderer1.orgorderer.com
+      url: grpcs://121.141.236.32:7150
+      tlsCACerts: 
+          pem: |
+            -----BEGIN CERTIFICATE-----
+            MIICGDCCAb+gAwIBAgIUfq/D6CUspzFW5pA0f5S+3ZmWNv0wCgYIKoZIzj0EAwIw
+            aTELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK
+            EwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRowGAYDVQQDExFjYS5vcmdv
+            cmRlcmVyLmNvbTAeFw0yMDA0MjQwNDIxMDBaFw0zNTA0MjEwNDIxMDBaMGkxCzAJ
+            BgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEUMBIGA1UEChMLSHlw
+            ZXJsZWRnZXIxDzANBgNVBAsTBkZhYnJpYzEaMBgGA1UEAxMRY2Eub3Jnb3JkZXJl
+            ci5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAR3caoKJgW4RhdnLOJIhDSp
+            UcAaKk0+tKrGpLj94IeaUh41DI7zMNFRWWqfxgEPQDZLjPOW928paV5FWSToUv60
+            o0UwQzAOBgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBATAdBgNVHQ4E
+            FgQUplKdVSHbjwS7wEvgiIyBctUQJqMwCgYIKoZIzj0EAwIDRwAwRAIgbVq29c0N
+            6Cc2n/OmEKv2HttRLtLJkti0aJVC3fZCvCQCIEUahxrRnv7qRMSzx17YF5jPgjWj
+            IjrjlcuhoT8l0d0u
+            -----END CERTIFICATE-----
+      grpcOptions:
+        ssl-target-name-override: orderer1.orgorderer.com
+        hostnameOverride: orderer1.orgorderer.com
+           
+   orderer2.orgorderer.com:
+      name: orderer1.orgorderer.com
+      url: grpcs://121.141.236.32:7250
+      tlsCACerts:
+          pem: |
+            -----BEGIN CERTIFICATE-----
+            MIICGDCCAb+gAwIBAgIUfq/D6CUspzFW5pA0f5S+3ZmWNv0wCgYIKoZIzj0EAwIw
+            aTELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK
+            EwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRowGAYDVQQDExFjYS5vcmdv
+            cmRlcmVyLmNvbTAeFw0yMDA0MjQwNDIxMDBaFw0zNTA0MjEwNDIxMDBaMGkxCzAJ
+            BgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEUMBIGA1UEChMLSHlw
+            ZXJsZWRnZXIxDzANBgNVBAsTBkZhYnJpYzEaMBgGA1UEAxMRY2Eub3Jnb3JkZXJl
+            ci5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAR3caoKJgW4RhdnLOJIhDSp
+            UcAaKk0+tKrGpLj94IeaUh41DI7zMNFRWWqfxgEPQDZLjPOW928paV5FWSToUv60
+            o0UwQzAOBgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBATAdBgNVHQ4E
+            FgQUplKdVSHbjwS7wEvgiIyBctUQJqMwCgYIKoZIzj0EAwIDRwAwRAIgbVq29c0N
+            6Cc2n/OmEKv2HttRLtLJkti0aJVC3fZCvCQCIEUahxrRnv7qRMSzx17YF5jPgjWj
+            IjrjlcuhoT8l0d0u
+            -----END CERTIFICATE-----
+      grpcOptions:
+        ssl-target-name-override: orderer2.orgorderer.com
+        hostnameOverride: orderer2.orgorderer.com   
+        
+peers:
+  peer0.orgnonghyupit.com:
+    url: grpcs://121.141.236.32:7051
+    tlsCACerts:
+        pem: |
+            -----BEGIN CERTIFICATE-----
+            MIICHzCCAcWgAwIBAgIUDgAgcQZQiVRTbYOpT+yyqIbpNygwCgYIKoZIzj0EAwIw
+            bDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK
+            EwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMR0wGwYDVQQDExRjYS5vcmdu
+            b25naHl1cGl0LmNvbTAeFw0yMDA0MjQwNDIxMDBaFw0zNTA0MjEwNDIxMDBaMGwx
+            CzAJBgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEUMBIGA1UEChML
+            SHlwZXJsZWRnZXIxDzANBgNVBAsTBkZhYnJpYzEdMBsGA1UEAxMUY2Eub3Jnbm9u
+            Z2h5dXBpdC5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQbYZAaQVQi5Jli
+            0sxlj6fXfQUYeQcktE3B0AMbCH4loVzhekKm7grMDF4ZCmYi8SiOgEYanEYCfE7f
+            PrmX24OQo0UwQzAOBgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBATAd
+            BgNVHQ4EFgQUxF4KyfIINFW35EXgmNn7SzzR7u8wCgYIKoZIzj0EAwIDSAAwRQIh
+            AMbFlrpD3kUeFJ3QIfJVOIsHyDwpvk7/0xp0zBk4xFAWAiBl+Wr7EIZ11uaxHf0r
+            ACy1M7BufysDeXBnyzBmJUS0kg==
+            -----END CERTIFICATE-----
+    grpcOptions:
+      ssl-target-name-override: peer0.orgnonghyupit.com
+      hostnameOverride: peer0.orgnonghyupit.com
+      
+  peer1.orgnonghyupit.com:
+    url: grpcs://121.141.236.32:7151
+    tlsCACerts:
+        pem: |
+            -----BEGIN CERTIFICATE-----
+            MIICHzCCAcWgAwIBAgIUDgAgcQZQiVRTbYOpT+yyqIbpNygwCgYIKoZIzj0EAwIw
+            bDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK
+            EwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMR0wGwYDVQQDExRjYS5vcmdu
+            b25naHl1cGl0LmNvbTAeFw0yMDA0MjQwNDIxMDBaFw0zNTA0MjEwNDIxMDBaMGwx
+            CzAJBgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEUMBIGA1UEChML
+            SHlwZXJsZWRnZXIxDzANBgNVBAsTBkZhYnJpYzEdMBsGA1UEAxMUY2Eub3Jnbm9u
+            Z2h5dXBpdC5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQbYZAaQVQi5Jli
+            0sxlj6fXfQUYeQcktE3B0AMbCH4loVzhekKm7grMDF4ZCmYi8SiOgEYanEYCfE7f
+            PrmX24OQo0UwQzAOBgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBATAd
+            BgNVHQ4EFgQUxF4KyfIINFW35EXgmNn7SzzR7u8wCgYIKoZIzj0EAwIDSAAwRQIh
+            AMbFlrpD3kUeFJ3QIfJVOIsHyDwpvk7/0xp0zBk4xFAWAiBl+Wr7EIZ11uaxHf0r
+            ACy1M7BufysDeXBnyzBmJUS0kg==
+            -----END CERTIFICATE-----
+    grpcOptions:
+      ssl-target-name-override: peer1.orgnonghyupit.com
+      hostnameOverride: peer1.orgnonghyupit.com
+      
+  peer2.orgnonghyupit.com:
+    url: grpcs://121.141.236.32:7251
+    tlsCACerts:
+        pem: |
+            -----BEGIN CERTIFICATE-----
+            MIICHzCCAcWgAwIBAgIUDgAgcQZQiVRTbYOpT+yyqIbpNygwCgYIKoZIzj0EAwIw
+            bDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK
+            EwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMR0wGwYDVQQDExRjYS5vcmdu
+            b25naHl1cGl0LmNvbTAeFw0yMDA0MjQwNDIxMDBaFw0zNTA0MjEwNDIxMDBaMGwx
+            CzAJBgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEUMBIGA1UEChML
+            SHlwZXJsZWRnZXIxDzANBgNVBAsTBkZhYnJpYzEdMBsGA1UEAxMUY2Eub3Jnbm9u
+            Z2h5dXBpdC5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQbYZAaQVQi5Jli
+            0sxlj6fXfQUYeQcktE3B0AMbCH4loVzhekKm7grMDF4ZCmYi8SiOgEYanEYCfE7f
+            PrmX24OQo0UwQzAOBgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBATAd
+            BgNVHQ4EFgQUxF4KyfIINFW35EXgmNn7SzzR7u8wCgYIKoZIzj0EAwIDSAAwRQIh
+            AMbFlrpD3kUeFJ3QIfJVOIsHyDwpvk7/0xp0zBk4xFAWAiBl+Wr7EIZ11uaxHf0r
+            ACy1M7BufysDeXBnyzBmJUS0kg==
+            -----END CERTIFICATE-----
+    grpcOptions:
+      ssl-target-name-override: peer2.orgnonghyupit.com
+      hostnameOverride: peer2.orgnonghyupit.com            
+      
+certificateAuthorities:
+    ca.orgnonghyupit.com:
+        url: http://121.141.236.32:7054
+        caName: ca.orgnonghyupit.com  
+        
+        
+#########################################################
+# invoke / query 시 필요한 parameter
+# 192 대역은 핑거 사설망으로, 공인망 작업시 변경필요
+#########################################################
+nhisMspId: nonghyupitMSP
+nhisCaId: admin
+nhisCaPw: adminpw
+
+channelName: tsa-channel
+chaincodeName: nonghyupit-tsa-cc
+
+nhisPeer0Name: peer0.orgnonghyupit.com
+nhisPeer0Url: grpcs://121.141.236.32:7051
+nhisCaAddress: http://121.141.236.32:7054
+
+caOrgOrdererCertPem: |
+   -----BEGIN CERTIFICATE-----
+   MIICGDCCAb+gAwIBAgIUfq/D6CUspzFW5pA0f5S+3ZmWNv0wCgYIKoZIzj0EAwIw
+   aTELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK
+   EwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRowGAYDVQQDExFjYS5vcmdv
+   cmRlcmVyLmNvbTAeFw0yMDA0MjQwNDIxMDBaFw0zNTA0MjEwNDIxMDBaMGkxCzAJ
+   BgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEUMBIGA1UEChMLSHlw
+   ZXJsZWRnZXIxDzANBgNVBAsTBkZhYnJpYzEaMBgGA1UEAxMRY2Eub3Jnb3JkZXJl
+   ci5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAR3caoKJgW4RhdnLOJIhDSp
+   UcAaKk0+tKrGpLj94IeaUh41DI7zMNFRWWqfxgEPQDZLjPOW928paV5FWSToUv60
+   o0UwQzAOBgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBATAdBgNVHQ4E
+   FgQUplKdVSHbjwS7wEvgiIyBctUQJqMwCgYIKoZIzj0EAwIDRwAwRAIgbVq29c0N
+   6Cc2n/OmEKv2HttRLtLJkti0aJVC3fZCvCQCIEUahxrRnv7qRMSzx17YF5jPgjWj
+   IjrjlcuhoT8l0d0u
+   -----END CERTIFICATE-----
+
+caOrgNhisCertPem: |
+   -----BEGIN CERTIFICATE-----
+   MIICHzCCAcWgAwIBAgIUDgAgcQZQiVRTbYOpT+yyqIbpNygwCgYIKoZIzj0EAwIw
+   bDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK
+   EwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMR0wGwYDVQQDExRjYS5vcmdu
+   b25naHl1cGl0LmNvbTAeFw0yMDA0MjQwNDIxMDBaFw0zNTA0MjEwNDIxMDBaMGwx
+   CzAJBgNVBAYTAlVTMRcwFQYDVQQIEw5Ob3J0aCBDYXJvbGluYTEUMBIGA1UEChML
+   SHlwZXJsZWRnZXIxDzANBgNVBAsTBkZhYnJpYzEdMBsGA1UEAxMUY2Eub3Jnbm9u
+   Z2h5dXBpdC5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQbYZAaQVQi5Jli
+   0sxlj6fXfQUYeQcktE3B0AMbCH4loVzhekKm7grMDF4ZCmYi8SiOgEYanEYCfE7f
+   PrmX24OQo0UwQzAOBgNVHQ8BAf8EBAMCAQYwEgYDVR0TAQH/BAgwBgEB/wIBATAd
+   BgNVHQ4EFgQUxF4KyfIINFW35EXgmNn7SzzR7u8wCgYIKoZIzj0EAwIDSAAwRQIh
+   AMbFlrpD3kUeFJ3QIfJVOIsHyDwpvk7/0xp0zBk4xFAWAiBl+Wr7EIZ11uaxHf0r
+   ACy1M7BufysDeXBnyzBmJUS0kg==
+   -----END CERTIFICATE------

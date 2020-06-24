@@ -1,0 +1,19 @@
+unKnown:
+  code: "9999"
+  msg: "서버오류가 발생하였습니다." 
+
+unVerified:
+  code: "1000"
+  msg: "블록체인에 저장되지 않은 문서입니다."
+  
+notJsonFormat:
+  code: "1001"
+  msg: "json형식이 아닙니다."
+  
+failInsertHLF:
+  code: "1002"
+  msg: "블록체인 저장에 실패하였습니다."
+  
+HLFUnKnown:
+  code: "1003"
+  msg: "체인코의 알수없는에러."

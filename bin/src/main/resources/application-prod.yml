@@ -1,0 +1,22 @@
+spring:
+  messages:
+    basename: messages/exception
+    encoding: UTF-8 
+
+
+server:
+  port: 9002 
+  
+logging:
+  config: ./src/main/resources/logback-spring.xml
+  
+ 
+hyperledger:
+  channelName: tsa-channel
+  chaincodeName: nonghyupit-tsa-cc
+  queryBySeqMethodName: queryDocuSeq
+  queryByHashMethodName: queryTsa
+  invokeMethodName: invokeTsa
+  walletPath: ./wallet
+  connectionConfig: ./src/main/resources/connection.yaml
+  

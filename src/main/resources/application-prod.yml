@@ -1,0 +1,25 @@
+spring:
+  messages:
+    basename: messages/exception
+    encoding: UTF-8 
+
+
+server:
+  port: 9002 
+  
+pubKey: certs/tsa_cert.der  #TSA인증서
+privKey: certs/tsa_cert.key #ROOT인증서가 발급한 개인키 
+
+logging:
+  config: logback-spring.xml
+  
+
+hyperledger:
+  channelName: tsa-channel
+  chaincodeName: nonghyupit-tsa-cc
+  queryBySeqMethodName: queryDocuSeq
+  queryByHashMethodName: queryTsa
+  invokeMethodName: invokeTsa
+  walletPath: wallet
+  connectionConfig: connection.yaml
+  
