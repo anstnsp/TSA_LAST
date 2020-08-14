@@ -17,18 +17,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import com.finger.tsa.common.advice.FchainException;
+import com.finger.tsa.util.Util;
 
 @Component
 @Configuration
 public class FabricSDK {
 
 	private static final Logger logger = LoggerFactory.getLogger(FabricSDK.class); 
-	
+
 	@Value("${hyperledger.walletPath}")
 	private String WALLET_PATH;
 	@Value("${hyperledger.connectionConfig}")
-	private String CON_CONFIG;
+	private String CONNECTION_CONFIG;
 	@Value("${hyperledger.channelName}")
 	private String channelName; 
 	@Value("${hyperledger.chaincodeName}")
@@ -41,11 +41,15 @@ public class FabricSDK {
 	private String invokeMethodName; 
 	
 	
+	
 	private Gateway getHLFGateway() throws IOException {
 		try {
 			logger.debug("#### START getHLFGateway ####");
-			Path walletPath = Paths.get(WALLET_PATH);
-			Path networkConfigPath = Paths.get(CON_CONFIG);
+			Path walletPath = Paths.get(Util.resourcesUrlPath(WALLET_PATH));
+			Path networkConfigPath = Paths.get(Util.resourcesUrlPath(CONNECTION_CONFIG));
+			//Path walletPath = Paths.get(WALLET_PATH);
+			//Path networkConfigPath = Paths.get(CONNECTION_CONFIG);
+
 			Wallet wallet = Wallet.createFileSystemWallet(walletPath);
 			Gateway.Builder builder = Gateway.createBuilder();
 			builder.identity(wallet, "nonghyupit").networkConfig(networkConfigPath).discovery(false);
@@ -70,35 +74,25 @@ public class FabricSDK {
 		}
 	}
 	
-	public boolean invokeTrasaction(Object obj) throws ContractException, TimeoutException, InterruptedException, IOException {
-		try {
-			Contract contract = getContract(channelName, chaincodeName); //하이퍼렛저 채널,체인코드에 연결 
-			contract.submitTransaction(invokeMethodName, obj.toString()); //하이퍼렛저에 전달 후 결과 받음. 
-			return true; 			
-		} catch (TimeoutException e) {
-			logger.error("[invokeTrasaction] TimeoutException : {}", e.getMessage());
-			throw e; 
-		} catch (InterruptedException e) {
-			logger.error("[invokeTrasaction] InterruptedException : {}", e.getMessage());
-			throw e; 
-		}
-
+	public boolean invokeTrasaction(Object obj) throws ContractException, TimeoutException, InterruptedException, ParseException, IOException {
+		Contract contract = getContract(channelName, chaincodeName); //하이퍼렛저 채널,체인코드에 연결 
+		contract.submitTransaction(invokeMethodName, obj.toString()); //하이퍼렛저에 전달 후 결과 받음. 
+		return true; 
 	}
 	
-	public String evaluateTransctionByHash(String hashedStringFromPdfAddedToken) throws ContractException, IOException {
+	public String evaluateTransctionByHash(String hashedStringFromPdfAddedToken) throws ContractException, IOException, ParseException {
 		Contract contract = getContract(channelName, chaincodeName); //하이퍼렛저 채널,체인코드에 연결 
 		byte[] byteResult = contract.evaluateTransaction(queryByHashMethodName, hashedStringFromPdfAddedToken);
 		String StringResult = new String(byteResult);
-		logger.debug(StringResult);
+		logger.debug("조회결과: "+StringResult);
 		return StringResult; 
 	}
 
-	public String evaluateTransctionBySeq(String hashedStringFromPdfAddedToken) throws ContractException, IOException {
+	public String evaluateTransctionBySeq(String hashedStringFromPdfAddedToken) throws ContractException, IOException, ParseException {
 		Contract contract = getContract(channelName, chaincodeName); //하이퍼렛저 채널,체인코드에 연결 
 		byte[] byteResult = contract.evaluateTransaction(queryBySeqMethodName, hashedStringFromPdfAddedToken);
 		String StringResult = new String(byteResult);
-		logger.debug(StringResult);
-
+		logger.debug("조회결과: "+StringResult);
 		return StringResult; 
 	}
 	

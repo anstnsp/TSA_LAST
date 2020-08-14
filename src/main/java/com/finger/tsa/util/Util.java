@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.MessageDigest;
@@ -17,14 +18,11 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-
 import org.apache.commons.codec.binary.Base64;
-import org.bouncycastle.cms.CMSException;
-import org.bouncycastle.cms.CMSSignedData;
-import org.bouncycastle.tsp.TSPException;
-import org.bouncycastle.tsp.TimeStampToken;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 
 
 public class Util {
@@ -64,11 +62,11 @@ public class Util {
 	    } finally {
 	    	if(fis != null) try { fis.close();} catch(IOException e) { 
 	    		logger.error("Exception position : FileUtil(IOException) - fileToString(File file)"); 
-	    		throw e;
+	    		
 	    	}
 	    	if(baos != null) try { baos.close();} catch(IOException e) { 
 	    		logger.error("Exception position : FileUtil(IOException) - fileToString(File file)"); 
-	    		throw e;
+	    		
 	    	}
 	    }
 	 
@@ -92,6 +90,19 @@ public class Util {
 	}
 
 	/**
+	 * 
+	 * @param pdf파일을 바이너리스트링으로 변환한 값
+	 * @return pdf파일을 바이너리스트링으로 변환한 값을 SHA-256으로 해쉬한 값  
+	 * @throws NoSuchAlgorithmException
+	 */
+	public static String getHashFromByteArray(byte[] byteArrayFromPdf) throws NoSuchAlgorithmException {
+		MessageDigest hashSum = MessageDigest.getInstance("SHA-256");
+		hashSum.update(byteArrayFromPdf);
+		String hashedStringFromPdf = Base64.encodeBase64String(hashSum.digest()); //해쉬생성 후 베이스64스트링 인코딩 .
+		return hashedStringFromPdf;
+	}	
+	
+	/**
 	 * 바이너리 스트링을 파일로 변환
 	 *
 	 * @param binaryFile
@@ -113,7 +124,7 @@ public class Util {
 	    }
 	 
 	    File destFile = new File(filePath + fileName); //파일경로와 파일명을 합치고 파일 객체를 만든다.
-	 
+	  
 	    byte[] buff = binaryFile.getBytes();  //Base64로 인코딩된 바이너리 스트링을 Base64로 디코딩 한 후 String으로 캐스팅한다. 
 	    String toStr = new String(buff);
 	    byte[] b64dec = base64Dec(toStr);
@@ -123,11 +134,12 @@ public class Util {
 	        fos.write(b64dec);
 	        fos.close();
 	    } catch (IOException e) {
-	        System.out.println("Exception position : FileUtil(IOException) - binaryToFile(String binaryFile, String filePath, String fileName)");
+	        logger.error("Exception position : FileUtil(IOException) - binaryToFile(String binaryFile, String filePath, String fileName)");
+	        throw e; 
 	    } finally {
 	    	if(fos != null) try { fos.close();} catch(IOException e) { 
 	    		logger.error("Exception position : FileUtil(IOException) - binaryToFile(String binaryFile, String filePath, String fileName)"); 
-	    		throw e;
+	    		
 	    	}
 	    }
 	 
@@ -207,25 +219,7 @@ public class Util {
         }
         return sb.toString();
     }
-	/**
-	 *  TimeStampToken 객체로 변경해주는 함수
-	 * @param timeStampToken
-	 * @return TimeStampToken
-	 * @throws CMSException
-	 * @throws TSPException
-	 * @throws IOException
-	 */
-	public static TimeStampToken byteToTimeStamp(byte[] timeStampToken) throws CMSException, TSPException, IOException {
-		logger.debug("byteToTimeStamp START !!");
-		try {
-			CMSSignedData signedToken = new CMSSignedData(timeStampToken);
-			return new TimeStampToken(signedToken);
-		} catch (CMSException |TSPException | IOException e) {
-			logger.error("byteToTimeStamp failed check timeStampToken: {}", e.getMessage());
-			throw e;
-		} 
 
-	}
 	/**
 	 * 파라미터로 받은 경로로 개인키파일을 읽어 개인키 obj형태로 만드는 함수
 	 * 
@@ -292,9 +286,24 @@ public class Util {
 				is.close();
 			} catch (IOException e) {
 				logger.error("FileInputStream Close Failed check system and jdk :{} ", e.getMessage());
-				throw e;
+				
 			}
 		}
 
 	}
+	
+	public static String byteArrayToHexString(byte[] bytes){ 
+		StringBuilder sb = new StringBuilder(); 
+		for(byte b : bytes){ 
+			sb.append(String.format("%02X", b&0xff)); 
+		} 
+		return sb.toString(); 
+	} 
+	
+    public static String resourcesUrlPath(String fileName) throws IOException {
+    	ClassPathResource resource = new ClassPathResource(fileName);
+    	Path path = Paths.get(resource.getURI());
+    	return path.toString(); 
+    }
+    
 }
